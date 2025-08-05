@@ -1,47 +1,84 @@
-### Prerequisites
+# README
 
-Ensure you have the following installed:
-- Python 3.8 or higher
-- pip (Python package installer)
+## Prerequisites
 
-### Installation
-    Install Dependencies:
-    ```sh
-    pip install -r requirements.txt
-    ```
+Ensure you have the following prerequisites installed:
 
-### Usage
-    Run the main script to start the backend server, with logs enabled for insights:
-    ```
-    uvicorn app.main:app --reload --log-level info --timeout-graceful-shutdown 5 --workers 1
-    ```
+* **Python** 3.8 or higher
+* **pip** (Python package installer)
 
+## Installation
 
-### Testing
-    In general the tests can be executed with pytest, or for a specific script with pytest<test-script>.
-    To test API functionality it is necessary that the server runs (see Usage)
+Install dependencies:
 
-### Design Choices
+```sh
+pip install -r requirements.txt
+```
 
-- Regarding the time frame of 2 hours, I understand this challenge as a prototypical spike. Therefor I choose the fast scripting language Python  
-- to standardize the type of errors, the LLM should choose from a pre-curated list of errors. Those error types are provided with the system prompt  
-- to minimize upfront loading time of llm, there is an API interface to start the LLM (internal controller) 
+## Usage
 
-*Not implemented but thought of*
-- [Evaluation] to evaluate the functionality of the backend, we could create a test dataset, covering different scenarios, with correct and wrong texts with each error type and also new error types. Very large texts to test performance, input which does not align with typical text formats (eg. recipies)
-- [Performance - How to handle long processing] using batch processing, to test each sentence after another and push the partial updates via a WebSocket back to the front End.  
+Start the backend server with live reloading and detailed logs:
 
+```sh
+uvicorn app.main:app \
+  --reload \
+  --log-level info \
+  --timeout-graceful-shutdown 5 \
+  --workers 1
+```
 
-### Challenges
-- Struggle to get LLM running, hard to debug -> long initial loading time, many parameters to test, local machine with few memory space left to load model
-    -> add exstensive logging
-    -> tested model without server (test.py)
-- expectation of 2 hours is a very short time frame for the task. Question: What to focus on? Solid LLM functionality? Architecture? Scalability? Test-coverage? ... 
-    -> decision to cover aspects of each dimension, for further fullfillment more time would be nice
+## Testing
 
+1. **Unit & Integration Tests**
 
-### Future Work
-- detect multiple error types per sentence
-- include prompt injection detection
-- reimplement the functionality in an industry robust framework, like Java Springboot
-- secure internal controller with secret to prevent misuse
+   * Run all tests:
+
+     ```sh
+     pytest
+     ```
+   * Run a specific test module:
+
+     ```sh
+     pytest <test_module>.py
+     ```
+2. **API Tests**
+
+   * Ensure the server is running (see **Usage**).
+   * Use your preferred HTTP client (e.g., `curl`, Postman, or automated scripts) to send requests and verify responses.
+
+## Design Choices
+
+* **Language & Framework**: Python was chosen for rapid prototyping within the two-hour spike timeframe.
+* **Error Standardization**: The LLM is prompted to select from a predefined list of grammar error types for consistent results.
+* **Model Initialization**: To minimize LLM startup latency during a user request, an internal controller API initializes the model on demand.
+* **Layered Architecture**: For cleaner code, accelerate development velocity, and testability.
+
+## Additional Considerations
+
+* **API Documentation**: Include an OpenAPI/Swagger specification for clear API contracts and client generation.
+* **Evaluation Dataset**: Create a diverse evaluation dataset covering each error type, long texts, and edge cases.
+* **Batch Processing & Streaming**: Implement batch processing with WebSocket-based partial updates for long-running requests.
+
+## Challenges
+
+* **LLM Setup & Debugging**
+
+  * Slow model loading and numerous parameters made debugging difficult.
+  * Limited local memory constrained model performance.
+  * **Mitigations**:
+
+    * Added extensive logging.
+    * Tested the model via a standalone script.
+
+* **Time Constraints**
+
+  * The two-hour timeframe required balancing LLM integration, architecture design, performance, and test coverage.
+  * **Approach**: Addressed core aspects for a prototype; further refinement would require more time.
+
+## Future Work
+
+* Detect and correct multiple error types per sentence.
+* Add prompt-injection detection and mitigation.
+* Integrate cloud-based GPU resources and optimized inference pipelines to accelerate LLM startup and reduce processing time.
+* Reimplement the architecture in an enterprise-grade framework (e.g., Java Spring Boot).
+* Secure the internal controller with authentication/authorization to prevent misuse.
