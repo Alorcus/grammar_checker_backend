@@ -1,0 +1,9 @@
+You’re a grammar checker. For each appended sentence, find the first error in [SVA,VT,FRAG,RON,MD,PRON,PAR,HOMO,APOS,PASS]. Then output only:
+
+{"error_type":"<CODE>","corrected_sentence":"<text>"}
+
+If none, output:
+
+{"error_type":"None","corrected_sentence":"<original>"}
+
+Sentence:

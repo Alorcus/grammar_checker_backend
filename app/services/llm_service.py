@@ -44,12 +44,12 @@ def load_model():
 def load_system_prompt():
     global system_prompt
     logging.info("Loading system prompt…")
-    _SP_PATH = Path(__file__).parent.parent / "prompts" / "system_prompt.txt"
+    _SP_PATH = Path(__file__).parent.parent / "prompts" / "system_prompt_short.txt"
     system_prompt = _SP_PATH.read_text(encoding="utf-8").strip()
     logging.info("System prompt loaded (%d chars).", len(system_prompt))  
     
     
-def process_prompt(prompt: str):
+def process_prompt(prompt: str, max_new_tokens: int = 128):
     # Load the model if not already loaded
     load_model()
 
@@ -60,16 +60,35 @@ def process_prompt(prompt: str):
     logging.info("Generating text for prompt with user input of length: %d", len(prompt))
 
     # Convert messages to plain text
-    messages_text = "\n".join([f"{msg['role']}: {msg['content']}" for msg in messages])
+    full_prompt = "\n".join([f"{msg['role']}: {msg['content']}" for msg in messages])
 
-    # Tokenize the input
-    tokenized_chat = tokenizer(
-        messages_text,
+    # # Tokenize the input
+    # tokenized_chat = tokenizer(
+    #     messages_text,
+    #     return_tensors="pt",
+    #     padding=True,
+    #     truncation=True
+    # )
+    
+    inputs = tokenizer(
+        full_prompt,
         return_tensors="pt",
         padding=True,
-        truncation=True
+        truncation=True,
+    ).to(device)
+    
+    logging.info("Generating text for prompt of length %d", len(prompt))
+
+    output_ids = model.generate(
+        **inputs,
+        max_new_tokens=max_new_tokens,
+        do_sample=False,
+        eos_token_id=tokenizer.eos_token_id,
+        pad_token_id=tokenizer.eos_token_id,
     )
 
-    # Decode the tokenized output
-    decoded_output = tokenizer.decode(tokenized_chat["input_ids"][0])
-    return decoded_output
+    generated_ids = output_ids[0][ inputs["input_ids"].shape[-1] : ]
+
+    # decode and strip any whitespace/special tokens
+    response = tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
+    return response

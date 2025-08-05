@@ -76,6 +76,3 @@ class GrammarService:
                 improved=corrected,
                 error_type=err_enum
             )
-        
-
-        
