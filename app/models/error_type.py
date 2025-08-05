@@ -1,5 +1,6 @@
 from enum import Enum
 
+# Categorizes different types of grammatical errors that the LLM should identify.
 class ErrorType(str, Enum):
     SVA   = "Subject-Verb Agreement"
     VT    = "Verb Tense Errors"
@@ -11,3 +12,4 @@ class ErrorType(str, Enum):
     HOMO  = "Homophone Confusion"
     APOS  = "Apostrophe Misplacement"
     PASS  = "Passive Voice Overuse"
+    NOERR = "No Error"
