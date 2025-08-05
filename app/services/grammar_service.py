@@ -6,6 +6,13 @@ from app.models.error_type import ErrorType
 from app.schemas.exchange_schema import SentenceCorrected, TextBody
 from app.services import llm_service
 
+# steal uvicorn's handlers for the root logger
+uv_err = logging.getLogger("uvicorn.error")
+root = logging.getLogger()
+root.handlers = uv_err.handlers
+root.setLevel(logging.INFO)
+
+
 class GrammarService:
     @staticmethod
     def check_grammar(text: TextBody) -> List[SentenceCorrected]:

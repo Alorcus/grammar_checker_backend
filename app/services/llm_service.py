@@ -1,6 +1,13 @@
 import logging
 from pathlib import Path
 
+# steal uvicorn's handlers for the root logger
+uv_err = logging.getLogger("uvicorn.error")
+root = logging.getLogger()
+root.handlers = uv_err.handlers
+root.setLevel(logging.INFO)
+
+
 tokenizer = model = device = None
 
 def load_model():
