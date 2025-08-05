@@ -1,0 +1,32 @@
+# log_config.yaml
+version: 1
+disable_existing_loggers: False
+
+formatters:
+  default:
+    fmt: "%(asctime)s %(levelname)s %(name)s %(message)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: default
+    level: INFO
+
+loggers:
+  uvicorn:
+    handlers: [console]
+    level: INFO
+  uvicorn.error:
+    handlers: [console]
+    level: INFO
+  uvicorn.access:
+    handlers: [console]
+    level: INFO
+  # your app’s logger
+  grammar_checker_backend:
+    handlers: [console]
+    level: INFO
+
+root:
+  level: INFO
+  handlers: [console]

@@ -1,0 +1,7 @@
+hf_xet
+torch
+transformers
+git+https://github.com/huggingface/transformers.git
+accelerate
+fastapi
+uvicorn
