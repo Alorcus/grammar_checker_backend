@@ -5,7 +5,7 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-@router.post("/grammar_check")
+@router.post("/check")
 async def grammar_check(text: TextBody):  
     result = GrammarService.check_grammar(text)
     return result

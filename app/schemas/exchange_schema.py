@@ -7,4 +7,4 @@ class TextBody(BaseModel):
 class SentenceCorrected(BaseModel):
     original: str
     improved: str
-    type: ErrorType
+    error_type: ErrorType
